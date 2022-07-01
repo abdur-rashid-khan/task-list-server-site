@@ -13,6 +13,26 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('DB connected')
 })
+
+
+// verify token 
+async function verifyToken(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth) {
+    return res.status(401).send({ messages: 'UnAuthorization' });
+  }
+  const token = auth.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ messages: 'Forbidden access' })
+    }
+    req.decoded = decoded;
+    next()
+  })
+
+}
+
+
 // Replace the uri string with your MongoDB deployment's connection string.
 const uri =
   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.lqf9l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -48,8 +68,7 @@ async function run() {
     // for update
     app.put('/manage-task/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id);
-      const filter = { "_id" : ObjectId(id) };
+      const filter = { _id : ObjectId(id) };
       const option = { upsert: true };
       const updateDos = {
         $set: {status:'completed'},
