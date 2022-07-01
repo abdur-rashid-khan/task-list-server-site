@@ -50,18 +50,21 @@ async function run() {
       const result = await ListCollection.insertOne(listData);
       res.send(result);
     })
-    app.get('/task',async(req,res)=>{
-      const query = {};
+    app.get('/task/:email',async(req,res)=>{
+      const email = req.params.email;
+      const query = {email:email};
       const result = await ListCollection.find(query).toArray();
       res.send(result);
     })
-    app.get('/incomplete-task',async(req,res)=>{
-      const query = {status:'incomplete'};
-      const result = await ListCollection.find(query).toArray();
-      res.send(result);
+    app.get('/incomplete-task/:email',async(req,res)=>{
+      const email = req.params.email;
+        const query = {status:'incomplete', email:email};
+        const result = await ListCollection.find(query).toArray();
+        res.send(result);
     })
-    app.get('/completed-task',async(req,res)=>{
-      const query = {status:'completed'};
+    app.get('/completed-task/:email',async(req,res)=>{
+      const email = req.params.email;
+      const query = {status:'completed', email:email};
       const result = await ListCollection.find(query).toArray();
       res.send(result);
     })
