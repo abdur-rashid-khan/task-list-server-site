@@ -79,6 +79,26 @@ async function run() {
       const result = await ListCollection.updateOne(filter, updateDos, option);
       res.send(result);
     })
+
+    // 
+    // for update
+    app.get('/update-task/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id : ObjectId(id) };
+      const result = await ListCollection.find(filter).toArray();
+      res.send(result);
+    })
+    // for update
+    // app.put('/update-task/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const filter = { _id : ObjectId(id) };
+    //   const option = { upsert: true };
+    //   const updateDos = {
+    //     $set: {status:'completed'},
+    //   }
+    //   const result = await ListCollection.updateOne(filter, updateDos, option);
+    //   res.send(result);
+    // })
   } finally {
     // await client.close();
   }
